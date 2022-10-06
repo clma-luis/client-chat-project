@@ -9,7 +9,7 @@ import ColorModeContext from "./shared/hooks/ColorModeContext";
 import { getDesignTokens } from "./theme/getDesignTokens";
 
 export default function App() {
-  const [mode, setMode] = React.useState("light");
+  const [mode, setMode] = React.useState("dark");
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
@@ -19,7 +19,7 @@ export default function App() {
     []
   );
 
-  const theme = React.useMemo(() => createTheme(getDesignTokens("dark")), [mode]);
+  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
   return (
     <ColorModeContext.Provider value={colorMode}>

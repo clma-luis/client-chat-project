@@ -18,7 +18,7 @@ const getDesignTokens = (mode) => ({
           700: '#E6EBF5',
           800: '#CCD2D9',
           900: '#F5F7FB',
-          1000: "#36404A"
+          1000: "#DCDFE1"
         },
         action: {
           active: '#6B7280',
@@ -40,7 +40,7 @@ const getDesignTokens = (mode) => ({
           contrastText: '#7a7f9a'
         },
         secondary: {
-          main: '#10B981',
+          main: '#7269EF',
           light: '#3FC79A',
           dark: '#0B815A',
           contrastText: '#FFFFFF'
@@ -109,7 +109,7 @@ const getDesignTokens = (mode) => ({
         contrastText: '#FFFFFF'
       }, 
       secondary: {
-        main: '#10B981',
+        main: '#7269EF',
         light: '#3FC79A',
         dark: '#0B815A',
         contrastText: '#FFFFFF'
@@ -165,7 +165,7 @@ export const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          textTransform: 'none'
+          textTransform: 'none',
         },
         sizeSmall: {
           padding: '6px 16px'

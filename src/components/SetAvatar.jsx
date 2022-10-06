@@ -1,13 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Buffer } from "buffer";
-import loader from "../assets/loader.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
+
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+
 export default function SetAvatar() {
+  const middlemMatch = useMediaQuery("(min-width:600px)");
+
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
   const [avatars, setAvatars] = useState([]);
@@ -64,40 +75,108 @@ export default function SetAvatar() {
     setAvatars(data);
     setIsLoading(false);
   }, []);
+
   return (
     <>
       {isLoading ? (
-        <Container>
-          <img src={loader} alt="loader" className="loader" />
-        </Container>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            gap: "3rem",
+            backgroundColor: "neutral.900",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          {/*  <img src={loader} alt="loader" className="loader" /> */}
+          <Box
+            sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
+            <Box
+              sx={{
+                width: "500px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <CircularProgress color="secondary" size={60}/>
+              <Typography variant="h6" color="primary.main">Cargando</Typography>
+            </Box>
+          </Box>
+        </Box>
       ) : (
-        <Container>
-          <div className="title-container">
-            <h1>Pick an Avatar as your profile picture</h1>
-          </div>
-          <div className="avatars">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            gap: "3rem",
+            backgroundColor: "neutral.900",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 2,
+            }}
+          >
+            <Typography variant="h4" color="primary.main">
+              Selecciona una foto de perfil
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", gap: "2rem" }}>
             {avatars.map((avatar, index) => {
               return (
-                <div
+                <Box
+                  key={avatar}
+                  component="img"
+                  sx={{
+                    width: "100%",
+                    maxHeight: middlemMatch ? "40%" : "50%",
+                    maxWidth: middlemMatch ? "30%" : "25%",
+                  }}
+                  alt="avatar"
+                  src={`data:image/svg+xml;base64,${avatar}`}
+                  onClick={() => setSelectedAvatar(index)}
+                />
+
+                /*  <div
                   className={`avatar ${
                     selectedAvatar === index ? "selected" : ""
                   }`}
                 >
+                  hola
                   <img
                     src={`data:image/svg+xml;base64,${avatar}`}
                     alt="avatar"
                     key={avatar}
                     onClick={() => setSelectedAvatar(index)}
                   />
-                </div>
+                </div> */
               );
             })}
-          </div>
-          <button onClick={setProfilePicture} className="submit-btn">
-            Set as Profile Picture
-          </button>
+          </Box>
+          <Button
+            onClick={setProfilePicture}
+            sx={{ width: "150px", height: "40px" }}
+            color="secondary"
+            variant="contained"
+          >
+            Aceptar
+          </Button>
           <ToastContainer />
-        </Container>
+        </Box>
       )}
     </>
   );
@@ -109,7 +188,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #131324;
+  background-color: "neutral.900";
   height: 100vh;
   width: 100vw;
 

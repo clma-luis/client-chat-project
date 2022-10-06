@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Avatar,
   Box,
@@ -14,7 +15,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 
-export default function Contacts({ contacts, changeChat }) {
+export default function Contacts({
+  contacts,
+  changeChat,
+  contactView,
+  setContactView,
+}) {
   const [background, setBackground] = useState(0);
 
   const theme = useTheme();
@@ -22,6 +28,7 @@ export default function Contacts({ contacts, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+
   useEffect(async () => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
@@ -43,7 +50,6 @@ export default function Contacts({ contacts, changeChat }) {
             flexDirection: "column",
             height: "100%",
             backgroundColor: "neutral.900",
-        
           }}
         >
           <Box
@@ -66,10 +72,10 @@ export default function Contacts({ contacts, changeChat }) {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  pl: 2
+                  pl: 2,
                 }}
               >
-                <Avatar>S</Avatar>
+                <Avatar alt={currentUserName} src={currentUserImage} />
               </Box>
 
               <Box
@@ -104,7 +110,7 @@ export default function Contacts({ contacts, changeChat }) {
               },
               "&::-webkit-scrollbar-thumb": {
                 backgroundColor: "neutral.800",
-                borderRadius: "16px"
+                borderRadius: "16px",
               },
             }}
           >
@@ -115,6 +121,7 @@ export default function Contacts({ contacts, changeChat }) {
                   onClick={() => {
                     changeCurrentChat(index, contact);
                     setBackground(index);
+                    setContactView(!contactView);
                   }}
                   sx={{
                     width: "100%",
@@ -150,7 +157,7 @@ export default function Contacts({ contacts, changeChat }) {
                             alignItems: "center",
                           }}
                         >
-                          <Avatar>H</Avatar>
+                          <Avatar src={contact.avatarImage} />
                         </Box>
                       </Grid>
                       <Grid item xs={8}>
@@ -172,7 +179,6 @@ export default function Contacts({ contacts, changeChat }) {
               );
             })}
           </Box>
-          <Divider sx={{ borderColor: "#2D3748" }} />
         </Box>
       )}
 
@@ -224,12 +230,13 @@ export default function Contacts({ contacts, changeChat }) {
   return (
     <Drawer
       anchor="left"
-      open
+      open={false}
       PaperProps={{
         sx: {
           backgroundColor: "neutral.900",
           color: "#FFFFFF",
-          width: matches ? "100vw" : "25vw",
+          width: matches ? (contactView ? "0px" : "100vw") : "25vw",
+          transitionDelay: "500ms",
         },
       }}
       variant="permanent"
@@ -238,4 +245,3 @@ export default function Contacts({ contacts, changeChat }) {
     </Drawer>
   );
 }
-

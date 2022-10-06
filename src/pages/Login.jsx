@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -25,31 +26,6 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -180,6 +156,7 @@ const navigate = useNavigate();
           flexGrow: 1,
           minHeight: "100%",
           height: "100vh",
+          backgroundColor: "#E1E0E6"
         }}
       >
         <Container maxWidth="sm">
@@ -283,7 +260,7 @@ const navigate = useNavigate();
 
               <Box sx={{ py: 2 }}>
                 <Button
-                  color="primary"
+                  color="secondary"
                   fullWidth
                   size="large"
                   type="submit"

@@ -1,13 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
-import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
-import { Avatar, Box, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AccountMenu from "../components/AccountMenu";
 
-export default function ChatContainer({ currentChat, socket }) {
+export default function ChatContainer({
+  currentChat,
+  socket,
+  contactView,
+  setContactView,
+}) {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -80,10 +96,11 @@ export default function ChatContainer({ currentChat, socket }) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "0 2rem",
+            padding: "0 1rem",
             backgroundColor: "neutral.1000",
             borderBottom: "1px solid ",
             borderColor: "neutral.800",
+      
           }}
         >
           <Box
@@ -94,15 +111,35 @@ export default function ChatContainer({ currentChat, socket }) {
               alignItems: "center",
             }}
           >
-            <Avatar>S</Avatar>
-            &nbsp; &nbsp;
+            {contactView && matches && (
+              <IconButton onClick={() => setContactView(!contactView)}>
+                <ArrowBackIcon color="primary" />
+              </IconButton>
+            )}
+            &nbsp;
+            <Avatar alt={currentChat.username} src={currentChat.avatarImage}/>
+            &nbsp;
             <Typography color="primary.main" variant="h5">
               {currentChat.username}
             </Typography>
           </Box>
-          {/*  <Logout /> */}
+
+          {contactView && matches && (
+            <Box>
+              <AccountMenu />
+            </Box>
+          )}
         </Box>
-        <div className="chat-messages">
+        <Box sx={{
+           '&::-webkit-scrollbar':{
+            width: "8px",
+           " &-thumb ":{
+              "backgroundColor": 'neutral.800',
+              width: "8px",
+              borderRadius: "16px"
+            }
+          }
+        }} className="chat-messages">
           {messages.map((message) => {
             return (
               <div ref={scrollRef} key={uuidv4()}>
@@ -118,8 +155,8 @@ export default function ChatContainer({ currentChat, socket }) {
               </div>
             );
           })}
-        </div>
-        <Box sx={{ height: "80px" }}>
+        </Box>
+        <Box sx={{ height: "80px", m: matches ? 0 :  1}}>
           <ChatInput handleSendMsg={handleSendMsg} />
         </Box>
       </Container>
@@ -136,6 +173,7 @@ const Container = styled.div`
   overflow: hidden;
 
   .chat-header {
+    height: 78px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -157,19 +195,15 @@ const Container = styled.div`
     }
   }
   .chat-messages {
+    width: 100% ;
+    height: auto;
+    max-height: 82%;
     padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    overflow: auto;
-    &::-webkit-scrollbar {
-      width: 0.2rem;
-      &-thumb {
-        background-color: #ffffff39;
-        width: 0.1rem;
-        border-radius: 1rem;
-      }
-    }
+    overflow-y: scroll;
+   
     .message {
       display: flex;
       align-items: center;

@@ -20,6 +20,8 @@ export default function Chat() {
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [contactView, setContactView] = useState(false);
+
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
@@ -51,13 +53,19 @@ export default function Chat() {
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
+
   return (
     <>
       <Grid container>
-        <Grid item xs={3} sx={{      backgroundColor: "neutral.1000",}}>
-          <Contacts contacts={contacts} changeChat={handleChatChange} />
+        <Grid item xs={contactView && matches ? 0 : 3} sx={{ backgroundColor: "neutral.1000" }}>
+          <Contacts
+            contacts={contacts}
+            changeChat={handleChatChange}
+            contactView={contactView}
+            setContactView={setContactView}
+          />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={contactView && matches ? 12 : 9}>
           <Box
             sx={{
               width: "100%",
@@ -70,7 +78,7 @@ export default function Chat() {
             {currentChat === undefined ? (
               <Welcome />
             ) : (
-              <ChatContainer currentChat={currentChat} socket={socket} />
+              <ChatContainer currentChat={currentChat} socket={socket} contactView={contactView} setContactView={setContactView}/>
             )}
           </Box>
         </Grid>
