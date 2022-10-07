@@ -8,29 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { loginRoute } from "../utils/APIRoutes";
 
-
-
-
-
-
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-
-
-export default function Login() {
-const navigate = useNavigate();
+export default function Login({ socket }) {
+  const navigate = useNavigate();
   const [newUser, setNewUser] = React.useState(false);
   const [userStatus, setUserStatus] = React.useState(false);
   const [statusMessage, setStatusMessage] = React.useState("");
@@ -53,13 +37,11 @@ const navigate = useNavigate();
     },
   });
 
-   useEffect(() => {
+  useEffect(() => {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }
   }, []);
-
-  
 
   const login = async () => {
     const { data } = await axios.post(
@@ -70,17 +52,22 @@ const navigate = useNavigate();
     if (!data.status) {
       setStatusMessage(data.msg);
       setUserStatus(true);
-    }else{
+    } else {
       localStorage.setItem(
         process.env.REACT_APP_LOCALHOST_KEY,
         JSON.stringify(data.user)
       );
 
+      socket.emit("newUser", {
+        userId: data.user._id,
+        email: data.user.email,
+        avatarImage: data.user.avatarImage,
+        username: data.user.username,
+        socketID: socket.id,
+      });
       navigate("/");
-   
     }
   };
-
 
   const handleSubmit = async () => {
     if (newUser) {
@@ -88,11 +75,8 @@ const navigate = useNavigate();
     } else {
       login();
     }
-
   };
 
-
- 
   const [values, setValues] = useState({ username: "", password: "" });
   const toastOptions = {
     position: "bottom-right",
@@ -112,7 +96,7 @@ const navigate = useNavigate();
   };
 
   const validateForm = () => {
-    const { username, password } =  formik.values;
+    const { username, password } = formik.values;
     if (username === "") {
       toast.error("Email and Password is required.", toastOptions);
       return false;
@@ -156,7 +140,7 @@ const navigate = useNavigate();
           flexGrow: 1,
           minHeight: "100%",
           height: "100vh",
-          backgroundColor: "#E1E0E6"
+          backgroundColor: "#E1E0E6",
         }}
       >
         <Container maxWidth="sm">
@@ -289,7 +273,6 @@ const navigate = useNavigate();
           </Box>
         </Container>
       </Box>
-      
     </>
   );
 }

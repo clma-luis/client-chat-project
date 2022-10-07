@@ -21,6 +21,10 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [contactView, setContactView] = useState(false);
+  const [ActiveUsers, setActiveUsers] = useState([]);
+
+console.log({ActiveUsers})
+console.log({currentUser})
 
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
@@ -33,10 +37,14 @@ export default function Chat() {
       );
     }
   }, []);
+
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host);
       socket.current.emit("add-user", currentUser._id);
+      socket.current.on("newUserResponse", (data) => {
+        setActiveUsers(data.filter((user)=> user.userId !== currentUser._id));
+      });
     }
   }, [currentUser]);
 
@@ -50,15 +58,26 @@ export default function Chat() {
       }
     }
   }, [currentUser]);
+
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
 
+
+console.log({contacts})
+
+
   return (
     <>
       <Grid container>
-        <Grid item xs={contactView && matches ? 0 : 3} sx={{ backgroundColor: "neutral.1000" }}>
+        <Grid
+          item
+          xs={contactView && matches ? 0 : 3}
+          sx={{ backgroundColor: "neutral.1000" }}
+        >
           <Contacts
+            socket={socket}
+            ActiveUsers={ActiveUsers}
             contacts={contacts}
             changeChat={handleChatChange}
             contactView={contactView}
@@ -78,7 +97,12 @@ export default function Chat() {
             {currentChat === undefined ? (
               <Welcome />
             ) : (
-              <ChatContainer currentChat={currentChat} socket={socket} contactView={contactView} setContactView={setContactView}/>
+              <ChatContainer
+                currentChat={currentChat}
+                socket={socket}
+                contactView={contactView}
+                setContactView={setContactView}
+              />
             )}
           </Box>
         </Grid>
@@ -86,24 +110,3 @@ export default function Chat() {
     </>
   );
 }
-/* 
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  background-color: #131324;
-  .container {
-    height: 100%;
-    width: 100%;
-    background-color: #00000076;
-    display: flex;
-    justify-content: space-between ;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
-    }
-  }
-`;
- */

@@ -37,6 +37,7 @@ export default function AccountMenu() {
     if (data.status === 200) {
       localStorage.clear();
       navigate("/login");
+      window.location.reload();
     }
   };
 
