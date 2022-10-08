@@ -23,8 +23,8 @@ export default function Chat() {
   const [contactView, setContactView] = useState(false);
   const [ActiveUsers, setActiveUsers] = useState([]);
 
-console.log({ActiveUsers})
-console.log({currentUser})
+  console.log({ ActiveUsers });
+  console.log({ currentUser });
 
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
@@ -43,7 +43,7 @@ console.log({currentUser})
       socket.current = io(host);
       socket.current.emit("add-user", currentUser._id);
       socket.current.on("newUserResponse", (data) => {
-        setActiveUsers(data.filter((user)=> user.userId !== currentUser._id));
+        setActiveUsers(data.filter((user) => user.userId !== currentUser._id));
       });
     }
   }, [currentUser]);
@@ -63,9 +63,7 @@ console.log({currentUser})
     setCurrentChat(chat);
   };
 
-
-console.log({contacts})
-
+  console.log({ contacts });
 
   return (
     <>

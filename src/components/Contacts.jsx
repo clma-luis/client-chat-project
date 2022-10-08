@@ -16,8 +16,8 @@ import { styled } from "@mui/material/styles";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
-    backgroundColor: "#44b700",
-    color: "#44b700",
+    backgroundColor: "#06D6A0",
+    color: "#06D6A0",
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     "&::after": {
       position: "absolute",
@@ -26,21 +26,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
       width: "100%",
       height: "100%",
       borderRadius: "50%",
-      animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
+      //animation: "ripple 1.2s infinite ease-in-out",
+      //border: "1px solid currentColor",
       content: '""',
     },
   },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
+  
 }));
 
 const StyledBadgeInactive = styled(Badge)(({ theme }) => ({
@@ -55,8 +46,8 @@ const StyledBadgeInactive = styled(Badge)(({ theme }) => ({
       width: "100%",
       height: "100%",
       borderRadius: "50%",
-      animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
+      //animation: "ripple 1.2s infinite ease-in-out",
+     // border: "1px solid currentColor",
       content: '""',
     },
   },
@@ -98,6 +89,8 @@ export default function Contacts({
     setCurrentSelected(index);
     changeChat(contact);
   };
+
+  console.log({ActiveUsers})
 
   const content = (
     <>
@@ -161,6 +154,15 @@ export default function Contacts({
               overflowY: "scroll",
               "&::-webkit-scrollbar": {
                 width: "0.4em",
+              },
+              '&-thumb:hover': {
+                background: '#3B4147'
+              },
+              " &-thumb ":{
+                "backgroundColor": 'transparent',
+                width: "8px",
+                borderRadius: "16px",
+             
               },
               "&::-webkit-scrollbar-track": {
                 boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
@@ -275,7 +277,6 @@ export default function Contacts({
           backgroundColor: "neutral.900",
           color: "#FFFFFF",
           width: matches ? (contactView ? "0px" : "100vw") : "25vw",
-          transitionDelay: "500ms",
         },
       }}
       variant="permanent"

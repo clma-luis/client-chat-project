@@ -4,11 +4,13 @@ import { IoMdSend } from "react-icons/io";
 import styled from "styled-components";
 import Picker from "emoji-picker-react";
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField, useTheme } from "@mui/material";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import { borderRadius } from "@mui/system";
 
 export default function ChatInput({ handleSendMsg }) {
+  const theme = useTheme();
+
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleEmojiPickerhideShow = () => {
@@ -29,79 +31,7 @@ export default function ChatInput({ handleSendMsg }) {
     }
   };
 
-  return (
-    <Container>
-        <Box
-            sx={{
-              backgroundColor: "neutral.900",
-              height: "100%" ,
-           
-          
-            }}
-            className="button-container"
-          >
-            <div className="emoji">
-              <IconButton>
-                 <EmojiEmotionsIcon
-                color="primary"
-                onClick={handleEmojiPickerhideShow}
-              />
-              </IconButton>
-             
-              {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
-            </div>
-          </Box>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            height: "100%",
-            backgroundColor: "neutral.900",
-            
-          }}
-        >
-        
-          <TextField
-            id="standard-multiline-static"
-            placeholder="Escribe tu mensaje"
-            multiline
-            rows={3}
-            defaultValue="Default Value"
-            variant="standard"
-            onChange={(e) => setMsg(e.target.value)}
-            value={msg}
-            sx={{
-              borderLeft: "1px solid",
-              borderColor: "neutral.800",
-              width: "90%",
-              pl: 1,
-            }}
-            InputProps={{
-              disableUnderline: true,
-            }}
-          />
-
-          <Box
-            sx={{
-              borderLeft: "1px solid",
-              borderColor: "neutral.800",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button type="submit">
-              <SendIcon />
-            </Button>
-          </Box>
-        </Box>
-      </form>
-    </Container>
-  );
-}
-const Container = styled.div`
+  const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -123,10 +53,9 @@ const Container = styled.div`
       }
       .emoji-picker-react {
         position: absolute;
-        top: -350px;
-        background-color: #080420;
-        box-shadow: 0 5px 10px #9a86f3;
-        border-color: #9a86f3;
+        top: -360px;
+        background-color: #262E35;
+       
         .emoji-scroll-wrapper::-webkit-scrollbar {
           background-color: #080420;
           width: 5px;
@@ -144,8 +73,10 @@ const Container = styled.div`
           border-color: #9a86f3;
         }
         .emoji-group:before {
-          background-color: #080420;
+          
+          background-color: #262E35;
         }
+      
       }
     }
   }
@@ -192,3 +123,81 @@ const Container = styled.div`
     }
   }
 `;
+
+  return (
+    <Container>
+      <Box
+        sx={{
+          backgroundColor: "neutral.900",
+          height: "98%",
+        }}
+        className="button-container"
+      >
+        <div className="emoji">
+          <IconButton>
+            <EmojiEmotionsIcon
+              color="primary"
+              onClick={handleEmojiPickerhideShow}
+            />
+          </IconButton>
+
+          {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick}  />}
+        </div>
+      </Box>
+      <form className="input-container" onSubmit={(event) => sendChat(event)}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            height: "100%",
+            backgroundColor: "neutral.900",
+          }}
+        >
+          <TextField
+            id="standard-multiline-static"
+            placeholder="Escribe tu mensaje"
+            multiline
+            rows={3}
+            defaultValue="Default Value"
+            variant="standard"
+            onChange={(e) => setMsg(e.target.value)}
+            value={msg}
+            sx={{
+              
+              width: "100%",
+              borderLeft: "1px solid",
+              borderColor: "neutral.800",
+              pl: 2,
+              pr: 2,
+            
+              
+            }}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                color: theme.palette.mode === "dark" ? "white" : "black",
+                
+              },
+            }}
+          />
+
+          <Box
+            sx={{
+              borderLeft: "1px solid",
+              borderColor: "neutral.800",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button type="submit">
+              <SendIcon />
+            </Button>
+          </Box>
+        </Box>
+      </form>
+    </Container>
+  );
+}
+

@@ -37,7 +37,8 @@ const getDesignTokens = (mode) => ({
           main: '#495057',
           light: '#7a7f9a',
           dark: '#3832A0',
-          contrastText: '#7a7f9a'
+          contrastText: '#7a7f9a',
+          contrast: "#ffffff"
         },
         secondary: {
           main: '#7269EF',

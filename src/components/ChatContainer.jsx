@@ -58,9 +58,9 @@ export default function ChatContainer({
       to: currentChat._id,
       from: data._id,
       msg,
-      socketID: socket.id
+      socketID: socket.id,
     });
-    
+
     await axios.post(sendMessageRoute, {
       from: data._id,
       to: currentChat._id,
@@ -102,7 +102,6 @@ export default function ChatContainer({
             backgroundColor: "neutral.1000",
             borderBottom: "1px solid ",
             borderColor: "neutral.800",
-      
           }}
         >
           <Box
@@ -119,7 +118,7 @@ export default function ChatContainer({
               </IconButton>
             )}
             &nbsp;
-            <Avatar alt={currentChat.username} src={currentChat.avatarImage}/>
+            <Avatar alt={currentChat.username} src={currentChat.avatarImage} />
             &nbsp;
             <Typography color="primary.main" variant="h5">
               {currentChat.username}
@@ -132,16 +131,22 @@ export default function ChatContainer({
             </Box>
           )}
         </Box>
-        <Box sx={{
-           '&::-webkit-scrollbar':{
-            width: "8px",
-           " &-thumb ":{
-              "backgroundColor": 'neutral.800',
+        <Box
+          sx={{
+            "&::-webkit-scrollbar": {
               width: "8px",
-              borderRadius: "16px"
-            }
-          }
-        }} className="chat-messages">
+              "&-thumb:hover": {
+                background: "#3B4147",
+              },
+              " &-thumb ": {
+                backgroundColor: "transparent",
+                width: "8px",
+                borderRadius: "16px",
+              },
+            },
+          }}
+          className="chat-messages"
+        >
           {messages.map((message) => {
             return (
               <div ref={scrollRef} key={uuidv4()}>
@@ -151,14 +156,19 @@ export default function ChatContainer({
                   }`}
                 >
                   <div className="content ">
-                    <p>{message.message}</p>
+                    <Typography
+                      color={message.fromSelf ? "primary" : "primary.contrast"}
+                      variant="h5"
+                    >
+                      {message.message}
+                    </Typography>
                   </div>
                 </div>
               </div>
             );
           })}
         </Box>
-        <Box sx={{ height: "80px", m: matches ? 0 :  1}}>
+        <Box sx={{ height: "80px", m: matches ? 0 : 1 }}>
           <ChatInput handleSendMsg={handleSendMsg} />
         </Box>
       </Container>
@@ -197,7 +207,7 @@ const Container = styled.div`
     }
   }
   .chat-messages {
-    width: 100% ;
+    width: 100%;
     height: auto;
     max-height: 82%;
     padding: 1rem 2rem;
@@ -205,8 +215,9 @@ const Container = styled.div`
     flex-direction: column;
     gap: 1rem;
     overflow-y: scroll;
-   
+
     .message {
+      position: relative;
       display: flex;
       align-items: center;
       .content {
@@ -214,7 +225,7 @@ const Container = styled.div`
         overflow-wrap: break-word;
         padding: 1rem;
         font-size: 1.1rem;
-        border-radius: 1rem;
+        border-radius: 10px;
         color: #d1d1d1;
         @media screen and (min-width: 720px) and (max-width: 1080px) {
           max-width: 70%;
@@ -223,14 +234,17 @@ const Container = styled.div`
     }
     .sended {
       justify-content: flex-end;
+
       .content {
-        background-color: #4f04ff21;
+        background-color: #303841;
+        font-size: 24px;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        background-color: #7269ef;
+        font-size: 24px;
       }
     }
   }
