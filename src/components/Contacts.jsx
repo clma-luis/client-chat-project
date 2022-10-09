@@ -90,7 +90,7 @@ export default function Contacts({
     changeChat(contact);
   };
 
-  console.log({ActiveUsers})
+
 
   const content = (
     <>

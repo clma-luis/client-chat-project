@@ -23,8 +23,7 @@ export default function Chat() {
   const [contactView, setContactView] = useState(false);
   const [ActiveUsers, setActiveUsers] = useState([]);
 
-  console.log({ ActiveUsers });
-  console.log({ currentUser });
+
 
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
@@ -52,7 +51,8 @@ export default function Chat() {
     if (currentUser) {
       if (currentUser.isAvatarImageSet) {
         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
+        setContacts(data.data.filter((item)=> item.role !== currentUser.role));
+
       } else {
         navigate("/setAvatar");
       }
@@ -63,7 +63,7 @@ export default function Chat() {
     setCurrentChat(chat);
   };
 
-  console.log({ contacts });
+
 
   return (
     <>

@@ -45,9 +45,10 @@ export default function Login({ socket }) {
 
   const login = async () => {
     const { data } = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      loginRoute,
       formik.values
     );
+
 
     if (!data.status) {
       setStatusMessage(data.msg);
