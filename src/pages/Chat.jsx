@@ -9,59 +9,87 @@ import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
 import { Box, Container, Grid, useMediaQuery, useTheme } from "@mui/material";
+import jwt_decode from "jwt-decode";
 
-export default function Chat() {
+export default function Chat({socket}) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const navigate = useNavigate();
-  const socket = useRef();
+  const socketChat = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [contactView, setContactView] = useState(false);
   const [ActiveUsers, setActiveUsers] = useState([]);
 
+  useEffect( () => {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
 
-
-  useEffect(async () => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
-      navigate("/login");
-    } else {
+    if(params.publicKey) {
+      const decoded = jwt_decode(params.publicKey);
+      localStorage.setItem(process.env.REACT_APP_LOCALHOST_KEY, JSON.stringify(decoded))
+      localStorage.setItem("X_AUTH_KEY",params.publicKey);
+      console.log(decoded)
+      setCurrentUser(decoded);
+      socket.emit("newUser", {
+        userId: decoded.sub,
+        email: decoded.email,
+        avatarImage: decoded.avatarImage,
+        username: decoded.username,
+        socketID: socket.id,
+      });
+    }else{
+      if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+        navigate("/login");
+      }
       setCurrentUser(
-        await JSON.parse(
+        JSON.parse(
           localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
         )
       );
     }
+
+    
   }, []);
 
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(host);
-      socket.current.emit("add-user", currentUser._id);
-      socket.current.on("newUserResponse", (data) => {
-        setActiveUsers(data.filter((user) => user.userId !== currentUser._id));
+      socketChat.current = io(host);
+      socketChat.current.emit("add-user", currentUser.sub);
+      socketChat.current.on("newUserResponse", (data) => {
+        setActiveUsers(data.filter((user) => user.userId !== currentUser.sub));
       });
     }
   }, [currentUser]);
 
-  useEffect(async () => {
-    if (currentUser) {
+  useEffect( () => {
+    const handleAllUser = async() => {   
+       console.log("test2", currentUser)
+    /*    if (currentUser) {
       if (currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data.filter((item)=> item.role !== currentUser.role));
-
+        const data = await axios.get(`${allUsersRoute}/${currentUser.sub}`);
+        console.log({data});
       } else {
         navigate("/setAvatar");
       }
+    } */
+    if(currentUser?.sub){
+      const data = await axios.get(`http://localhost:5000/api/auth/allusers/${currentUser.sub}`);
+    setContacts(data?.data)
     }
+    
+
+    }
+    handleAllUser()
   }, [currentUser]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
+console.log("test", contacts)
 
 
 
@@ -74,12 +102,14 @@ export default function Chat() {
           sx={{ backgroundColor: "neutral.1000" }}
         >
           <Contacts
-            socket={socket}
+            socket={socketChat}
             ActiveUsers={ActiveUsers}
             contacts={contacts}
             changeChat={handleChatChange}
             contactView={contactView}
             setContactView={setContactView}
+           
+        
           />
         </Grid>
         <Grid item xs={contactView && matches ? 12 : 9}>
@@ -93,11 +123,11 @@ export default function Chat() {
             }}
           >
             {currentChat === undefined ? (
-              <Welcome />
+              <Welcome userName={currentUser?.username}/>
             ) : (
               <ChatContainer
                 currentChat={currentChat}
-                socket={socket}
+                socket={socketChat}
                 contactView={contactView}
                 setContactView={setContactView}
               />

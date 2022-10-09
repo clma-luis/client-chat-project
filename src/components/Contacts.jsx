@@ -94,7 +94,7 @@ export default function Contacts({
 
   const content = (
     <>
-      {currentUserImage && currentUserImage && (
+     
         <Box
           sx={{
             display: "flex",
@@ -264,7 +264,7 @@ export default function Contacts({
             })}
           </Box>
         </Box>
-      )}
+
     </>
   );
 
