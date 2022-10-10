@@ -86,7 +86,6 @@ export default function Contacts({
     setCurrentUserImage(data.avatarImage);
   }, []);
   const changeCurrentChat = (index, contact) => {
-    setCurrentSelected(index);
     changeChat(contact);
   };
 

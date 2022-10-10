@@ -67,18 +67,10 @@ export default function Chat({socket}) {
 
   useEffect( () => {
     const handleAllUser = async() => {   
-       console.log("test2", currentUser)
-    /*    if (currentUser) {
-      if (currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser.sub}`);
-        console.log({data});
-      } else {
-        navigate("/setAvatar");
-      }
-    } */
+       
     if(currentUser?.sub){
       const data = await axios.get(`http://localhost:5000/api/auth/allusers/${currentUser.sub}`);
-    setContacts(data?.data)
+    setContacts(data?.data.filter(item => item.role !== currentUser.role))
     }
     
 
@@ -89,9 +81,6 @@ export default function Chat({socket}) {
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
-console.log("test", contacts)
-
-
 
   return (
     <>
