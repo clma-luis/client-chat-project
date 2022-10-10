@@ -72,63 +72,18 @@ export default function Login({ socket }) {
 
   const handleSubmit = async () => {
     if (newUser) {
-      console.log("new user");
+   return "new user"
     } else {
       login();
     }
   };
 
-  // const [values, setValues] = useState({ username: "", password: "" });
-  // const toastOptions = {
-  //   position: "bottom-right",
-  //   autoClose: 8000,
-  //   pauseOnHover: true,
-  //   draggable: true,
-  //   theme: "dark",
-  // };
   useEffect(() => {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }
   }, []);
 
-  // const handleChange = (event) => {
-  //   setValues({ ...values, [event.target.name]: event.target.value });
-  // };
-
-  // const validateForm = () => {
-  //   const { username, password } = formik.values;
-  //   if (username === "") {
-  //     toast.error("Email and Password is required.", toastOptions);
-  //     return false;
-  //   } else if (password === "") {
-  //     toast.error("Email and Password is required.", toastOptions);
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
-  // const handleSubmitt = async (event) => {
-  //   event.preventDefault();
-  //   if (validateForm()) {
-  //     const { username, password } = values;
-  //     const { data } = await axios.post(loginRoute, {
-  //       username,
-  //       password,
-  //     });
-  //     if (data.status === false) {
-  //       toast.error(data.msg, toastOptions);
-  //     }
-  //     if (data.status === true) {
-  //       localStorage.setItem(
-  //         process.env.REACT_APP_LOCALHOST_KEY,
-  //         JSON.stringify(data.user)
-  //       );
-
-  //       navigate("/");
-  //     }
-  //   }
-  // };
 
   return (
     <>

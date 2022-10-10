@@ -32,7 +32,6 @@ export default function Chat({socket}) {
       const decoded = jwt_decode(params.publicKey);
       localStorage.setItem(process.env.REACT_APP_LOCALHOST_KEY, JSON.stringify(decoded))
       localStorage.setItem("X_AUTH_KEY",params.publicKey);
-      console.log(decoded)
       setCurrentUser(decoded);
       socket.emit("newUser", {
         userId: decoded.sub,

@@ -82,7 +82,6 @@ export default function ChatContainer({
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  console.log(messages);
 
   return (
     <>
