@@ -247,15 +247,9 @@ export default function Contacts({
                         <Typography color="primary.main" variant="h5">
                           {contact.username}
                         </Typography>
-                        <Box sx={{ color: "primary.light" }}>
-                          <p>Okay está bien 😊😊</p>
-                        </Box>
+                       
                       </Grid>
-                      <Grid item xs={2}>
-                        <Box sx={{ pt: 1.4, color: "primary.light" }}>
-                          <p>2:50</p>
-                        </Box>
-                      </Grid>
+                     
                     </Grid>
                   </Box>
                 </Box>
