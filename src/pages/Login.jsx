@@ -45,7 +45,7 @@ export default function Login({ socket }) {
 
   const login = async () => {
     const { data } = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      loginRoute,
       formik.values
     );
 
@@ -57,9 +57,10 @@ export default function Login({ socket }) {
         process.env.REACT_APP_LOCALHOST_KEY,
         JSON.stringify(data.user)
       );
+      localStorage.setItem("X_AUTH_KEY", data.token); //TODO: Pasar a entorno
 
       socket.emit("newUser", {
-        userId: data.user._id,
+        userId: data.user.sub,
         email: data.user.email,
         avatarImage: data.user.avatarImage,
         username: data.user.username,
@@ -71,63 +72,18 @@ export default function Login({ socket }) {
 
   const handleSubmit = async () => {
     if (newUser) {
-      console.log("new user");
+   return "new user"
     } else {
       login();
     }
   };
 
-  const [values, setValues] = useState({ username: "", password: "" });
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
   useEffect(() => {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }
   }, []);
 
-  const handleChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const validateForm = () => {
-    const { username, password } = formik.values;
-    if (username === "") {
-      toast.error("Email and Password is required.", toastOptions);
-      return false;
-    } else if (password === "") {
-      toast.error("Email and Password is required.", toastOptions);
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmitt = async (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      const { username, password } = values;
-      const { data } = await axios.post(loginRoute, {
-        username,
-        password,
-      });
-      if (data.status === false) {
-        toast.error(data.msg, toastOptions);
-      }
-      if (data.status === true) {
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(data.user)
-        );
-
-        navigate("/");
-      }
-    }
-  };
 
   return (
     <>

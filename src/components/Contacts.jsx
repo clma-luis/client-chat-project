@@ -86,15 +86,14 @@ export default function Contacts({
     setCurrentUserImage(data.avatarImage);
   }, []);
   const changeCurrentChat = (index, contact) => {
-    setCurrentSelected(index);
     changeChat(contact);
   };
 
-  console.log({ActiveUsers})
+
 
   const content = (
     <>
-      {currentUserImage && currentUserImage && (
+     
         <Box
           sx={{
             display: "flex",
@@ -248,15 +247,9 @@ export default function Contacts({
                         <Typography color="primary.main" variant="h5">
                           {contact.username}
                         </Typography>
-                        <Box sx={{ color: "primary.light" }}>
-                          <p>Okay está bien 😊😊</p>
-                        </Box>
+                       
                       </Grid>
-                      <Grid item xs={2}>
-                        <Box sx={{ pt: 1.4, color: "primary.light" }}>
-                          <p>2:50</p>
-                        </Box>
-                      </Grid>
+                     
                     </Grid>
                   </Box>
                 </Box>
@@ -264,7 +257,7 @@ export default function Contacts({
             })}
           </Box>
         </Box>
-      )}
+
     </>
   );
 

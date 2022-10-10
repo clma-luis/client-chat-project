@@ -32,7 +32,7 @@ export default function AccountMenu() {
   const handleLogout = async () => {
     const id = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    )._id;
+    ).sub;
     const data = await axios.get(`${logoutRoute}/${id}`);
     if (data.status === 200) {
       localStorage.clear();

@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
+import moment from "moment";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
 import { v4 as uuidv4 } from "uuid";
@@ -15,7 +16,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccountMenu from "../components/AccountMenu";
-
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 export default function ChatContainer({
   currentChat,
   socket,
@@ -24,6 +25,8 @@ export default function ChatContainer({
 }) {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("md"));
+  const matchImage = useMediaQuery("(max-width:760px)");
+  const matchImageMini = useMediaQuery("(max-width:350px)");
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -33,42 +36,33 @@ export default function ChatContainer({
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
     const response = await axios.post(recieveMessageRoute, {
-      from: data._id,
+      from: data.sub,
       to: currentChat._id,
     });
     setMessages(response.data);
   }, [currentChat]);
 
-  useEffect(() => {
-    const getCurrentChat = async () => {
-      if (currentChat) {
-        await JSON.parse(
-          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-        )._id;
-      }
-    };
-    getCurrentChat();
-  }, [currentChat]);
-
-  const handleSendMsg = async (msg) => {
+  const handleSendMsg = async (msg, image) => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
     socket.current.emit("send-msg", {
       to: currentChat._id,
-      from: data._id,
+      from: data.sub,
       msg,
+      image,
       socketID: socket.id,
     });
 
     await axios.post(sendMessageRoute, {
-      from: data._id,
+      from: data.sub,
       to: currentChat._id,
       message: msg,
+      image: image,
     });
 
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
+    msgs.push({ fromSelf: true, message: msg, image: image });
     setMessages(msgs);
   };
 
@@ -88,13 +82,14 @@ export default function ChatContainer({
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+
   return (
     <>
       <Container>
         <Box
           sx={{
             width: "100%",
-            height: "78px",
+            height: "80px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -135,11 +130,8 @@ export default function ChatContainer({
           sx={{
             "&::-webkit-scrollbar": {
               width: "8px",
-              "&-thumb:hover": {
-                background: "#3B4147",
-              },
               " &-thumb ": {
-                backgroundColor: "transparent",
+                background: "#3B4147",
                 width: "8px",
                 borderRadius: "16px",
               },
@@ -149,22 +141,64 @@ export default function ChatContainer({
         >
           {messages.map((message) => {
             return (
-              <div ref={scrollRef} key={uuidv4()}>
-                <div
+              <Box ref={scrollRef} key={uuidv4()}>
+                <Box
                   className={`message ${
                     message.fromSelf ? "sended" : "recieved"
                   }`}
                 >
-                  <div className="content ">
+                  <Box
+                  sx={{backgroundColor: message.fromSelf ?  "neutral.900" : "secondary.main"}}
+                  className="content ">
+                    {message?.image === "" ? "" : (
+                      <Box
+                        component="img"
+                        sx={{
+                          height: matchImage
+                            ? matchImageMini
+                              ? 80
+                              : 150
+                            : 233,
+                            border: "1px solid ",
+                        
+                            borderRadius: "10px",
+                          width: matchImage ? (matchImageMini ? 80 : 150) : 350,
+                          maxHeight: { xs: 233, md: 167 },
+                          maxWidth: { xs: 350, md: 250 },
+                        }}
+                        alt="imagen-chat"
+                        src={`${message.image}`}
+                      />
+                    )}
+
                     <Typography
                       color={message.fromSelf ? "primary" : "primary.contrast"}
-                      variant="h5"
+                      variant="h6"
                     >
                       {message.message}
                     </Typography>
-                  </div>
-                </div>
-              </div>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: message.fromSelf
+                          ? "flex-start"
+                          : "flex-end",
+                        alignItems: "center",
+                        pt: 2,
+                      }}
+                    >
+                      <AccessTimeIcon
+                        color={message.fromSelf ? "primary" : "primary.contrast"}
+                        sx={{ fontSize: "16px" }}
+                      />
+                      &nbsp;
+                      <Typography color={ message.fromSelf ? "primary.light" : "primary.contrast"}>
+                        {moment(message.time).format("HH:MM")}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
             );
           })}
         </Box>
@@ -221,7 +255,7 @@ const Container = styled.div`
       display: flex;
       align-items: center;
       .content {
-        max-width: 40%;
+        max-width: 100%;
         overflow-wrap: break-word;
         padding: 1rem;
         font-size: 1.1rem;
@@ -236,14 +270,14 @@ const Container = styled.div`
       justify-content: flex-end;
 
       .content {
-        background-color: #303841;
+      
         font-size: 24px;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #7269ef;
+    
         font-size: 24px;
       }
     }

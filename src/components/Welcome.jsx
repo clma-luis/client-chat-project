@@ -4,16 +4,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import cellPhone from "../assets/cellPhone.png";
 
-export default function Welcome() {
-  const [userName, setUserName] = useState("");
+export default function Welcome({userName}) {
   
-  useEffect(async () => {
-    setUserName(
-      await JSON.parse(
-        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-      ).username
-    );
-  }, []);
 
   return (
     <Box sx={{display:"flex", flexDirection:"column", justifyContent:" center", alignItems: "center"}}>
